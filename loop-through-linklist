@@ -1,0 +1,12 @@
+ <ul>
+  {% for link in linklists.filter-collection-sidebar.links %}
+    <li class="category-list">
+      <a href="{{ link.url }}">{{ link.title }}</a>
+    </li>
+  {% endfor %}
+</ul>
+
+
+{% comment %}
+change filter-collection-sidebar to your menu handle
+{% endcomment %}
