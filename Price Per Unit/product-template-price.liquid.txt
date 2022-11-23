@@ -1,0 +1,50 @@
+  {%- when 'price' -%}
+                    <div class="product-block product-block--price" {{ block.shopify_attributes }}>
+                      {%- assign hide_sale_price = true -%}
+                      {%- if product.compare_at_price_max > product.price -%}
+                        {%- if current_variant.compare_at_price > current_variant.price -%}
+                          {%- assign hide_sale_price = false -%}
+                        {%- endif -%}
+                        <span
+                          data-a11y-price
+                          class="visually-hidden"
+                          aria-hidden="{{ hide_sale_price }}">
+                            {{ 'products.general.regular_price' | t }}
+                        </span>
+                        <span data-product-price-wrap class="{% if hide_sale_price %} hide{% endif %}">
+                          <span data-compare-price class="product__price product__price--compare">
+                            {%- if current_variant.compare_at_price > current_variant.price -%}
+                              {{ current_variant.compare_at_price | money }}
+                            {%- endif -%}
+                          </span>
+                        </span>
+                        <span data-compare-price-a11y class="visually-hidden">{{ 'products.general.sale_price' | t }}</span>
+                      {%- else -%}
+                        <span data-a11y-price class="visually-hidden">{{ 'products.general.regular_price' | t }}</span>
+                      {%- endif -%}
+
+                      <span data-product-price
+                        class="product__price{% if current_variant.compare_at_price > current_variant.price %} on-sale{% endif %}">
+                        {%- unless product.empty? -%}
+                          {{ current_variant.price | money }}
+                        {%- else -%}
+                          {{ 1999 | money }}
+                        {%- endunless -%}
+                      </span>
+              {% if product.metafields.custom.quantity != blank %}
+                <span class="per-unit-price">{{ current_variant.price | divided_by: product.metafields.custom.quantity | money }}/unit</span>
+              {% endif %}
+
+                  
+                  <!--code for variant price /unit -->
+                    {% for variant in product.variants %}
+                       {% if variant.metafields.custom.variant_quantity != blank %}
+                         <span data-variant-id="{{variant.id}}" 
+                          style="{% if product.selected_or_first_available_variant.id == variant.id %} display: inline; {% endif %}"
+                          class="per-unit-price-variant perunit">
+                             {{ current_variant.price | divided_by: variant.metafields.custom.variant_quantity | money }}
+                         per {% if variant.metafields.custom.unit_word_place == blank %}unit{% endif %}{% if variant.metafields.custom.unit_word_place != blank %}{{ variant.metafields.custom.unit_word_place }}{% endif %}</span>
+                        {% endif %}             
+                    {% endfor %} 
+                  
+                  <!--code for variant price /unit -->
